@@ -5,6 +5,8 @@ from unkey.py import Unkey
 import os
 from dotenv import load_dotenv
 
+load_dotenv()
+
 app = FastAPI(title="My Awesome API", version="1.0.0")
 
 class Person(BaseModel):
@@ -21,18 +23,23 @@ async def verify_api_key(authorization: Optional[str] = Header(None)):
     # Extract key from "Bearer <key>" format
     if authorization.startswith("Bearer "):
         key = authorization[7:]
-    else: key=authorization
+    else:
+        raise HTTPException(status_code=401, detail="Authorization header must use Bearer token")
 
     try:
-        with Unkey(root_key=os.getenv("UNKEY_ROOT_KEY")) as unkey:
+        root_key = os.getenv("UNKEY_ROOT_KEY")
+        if not root_key:
+            raise HTTPException(status_code=500, detail="UNKEY_ROOT_KEY environment variable not set")
+
+        with Unkey(root_key=root_key) as unkey:
             res = unkey.keys.verify_key(key=key)
 
-            if not res.valid:
+            if not res.data.valid:
                 raise HTTPException(status_code=401, detail="Invalid API key")
             
             return res
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Key verification fails: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Key verification failed: {str(e)}")
     
 @app.get("/person", response_model=Person)
 def get_person(key_info = Depends(verify_api_key)) -> Person:
