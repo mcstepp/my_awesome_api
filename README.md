@@ -40,6 +40,25 @@ A simple Python API built with FastAPI that includes API key authentication usin
 
 ## Running the API
 
+### Option 1: Using Docker (Recommended)
+
+1. **Build the Docker image**
+   ```bash
+   docker build -t my-awesome-api .
+   ```
+
+2. **Run the container**
+   ```bash
+   docker run -p 8080:8080 my-awesome-api
+   ```
+
+3. **API will be available at:**
+   - API: `http://localhost:8080`
+   - Interactive docs: `http://localhost:8080/docs`
+   - OpenAPI spec: `http://localhost:8080/openapi.json`
+
+### Option 2: Local Development
+
 1. **Activate virtual environment** (if not already active)
    ```bash
    source venv/bin/activate
@@ -88,13 +107,13 @@ true
 ### With curl
 ```bash
 # Test the person endpoint
-curl -H "Authorization: Bearer your_api_key_here" http://localhost:8000/person
+curl -H "Authorization: Bearer your_api_key_here" http://localhost:8080/person
 
 # Test the status endpoint
-curl -H "Authorization: Bearer your_api_key_here" http://localhost:8000/status
+curl -H "Authorization: Bearer your_api_key_here" http://localhost:8080/status
 
 # Pretty print JSON response
-curl -H "Authorization: Bearer your_api_key_here" http://localhost:8000/person | jq
+curl -H "Authorization: Bearer your_api_key_here" http://localhost:8080/person | jq
 ```
 
 ### Authentication
@@ -118,6 +137,8 @@ python -c "from main import app; import json; from fastapi.openapi.utils import 
 my_awesome_api/
 ├── main.py              # Main FastAPI application
 ├── requirements.txt     # Python dependencies
+├── Dockerfile           # Docker configuration
+├── .dockerignore        # Docker ignore rules
 ├── .env                # Environment variables (not in git)
 ├── .gitignore          # Git ignore rules
 ├── openapi.json        # Generated OpenAPI specification
