@@ -1,8 +1,5 @@
-from fastapi import FastAPI, HTTPException, Depends, Header
+from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import Dict, Any, Optional
-from unkey.py import Unkey
-import os
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -15,34 +12,9 @@ class Person(BaseModel):
     age: int
     email: str
     city: str
-
-async def verify_api_key(authorization: Optional[str] = Header(None)):
-    if not authorization:
-        raise HTTPException(status_code=401, detail="API key required")
-    
-    # Extract key from "Bearer <key>" format
-    if authorization.startswith("Bearer "):
-        key = authorization[7:]
-    else:
-        raise HTTPException(status_code=401, detail="Authorization header must use Bearer token")
-
-    try:
-        root_key = os.getenv("UNKEY_ROOT_KEY")
-        if not root_key:
-            raise HTTPException(status_code=500, detail="UNKEY_ROOT_KEY environment variable not set")
-
-        with Unkey(root_key=root_key) as unkey:
-            res = unkey.keys.verify_key(key=key)
-
-            if not res.data.valid:
-                raise HTTPException(status_code=401, detail="Invalid API key")
-            
-            return res
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Key verification failed: {str(e)}")
     
 @app.get("/person", response_model=Person)
-def get_person(key_info = Depends(verify_api_key)) -> Person:
+def get_person() -> Person:
     return Person(
         id=1,
         name="John Doe",
@@ -52,5 +24,5 @@ def get_person(key_info = Depends(verify_api_key)) -> Person:
     )
 
 @app.get("/status", response_model=bool)
-def get_status(key_info = Depends(verify_api_key)) -> bool:
+def get_status() -> bool:
     return True
