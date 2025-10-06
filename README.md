@@ -126,9 +126,13 @@ Authorization: Bearer your_api_key_here
 
 The API automatically reloads when you make changes to the code (thanks to the `--reload` flag).
 
-To generate a fresh OpenAPI specification:
+### OpenAPI Specification
+
+The OpenAPI spec is automatically generated in YAML format (`openapi.yaml`) every time the application starts. This happens through a startup event handler in the FastAPI app.
+
+If you need to manually regenerate it without starting the server:
 ```bash
-python -c "from main import app; import json; from fastapi.openapi.utils import get_openapi; print(json.dumps(get_openapi(title=app.title, version=app.version, routes=app.routes), indent=2))" > openapi.json
+python -c "from main import app; import yaml; yaml.dump(app.openapi(), open('openapi.yaml', 'w'), default_flow_style=False, sort_keys=False)"
 ```
 
 ## Project Structure
@@ -141,7 +145,7 @@ my_awesome_api/
 ├── .dockerignore        # Docker ignore rules
 ├── .env                # Environment variables (not in git)
 ├── .gitignore          # Git ignore rules
-├── openapi.json        # Generated OpenAPI specification
+├── openapi.yaml        # Generated OpenAPI specification
 ├── venv/               # Virtual environment (not in git)
 └── README.md           # This file
 ```
