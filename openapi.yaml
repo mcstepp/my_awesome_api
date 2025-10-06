@@ -1,0 +1,55 @@
+openapi: 3.1.0
+info:
+  title: My Awesome API
+  version: 1.0.0
+paths:
+  /person:
+    get:
+      summary: Get Person
+      operationId: get_person_person_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+  /status:
+    get:
+      summary: Get Status
+      operationId: get_status_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: boolean
+                title: Response Get Status Status Get
+components:
+  schemas:
+    Person:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        age:
+          type: integer
+          title: Age
+        email:
+          type: string
+          title: Email
+        city:
+          type: string
+          title: City
+      type: object
+      required:
+      - id
+      - name
+      - age
+      - email
+      - city
+      title: Person

@@ -1,10 +1,16 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from dotenv import load_dotenv
+import yaml
 
 load_dotenv()
 
 app = FastAPI(title="My Awesome API", version="1.0.0")
+
+@app.on_event("startup")
+async def generate_openapi_yaml():
+    with open("openapi.yaml", "w") as f:
+        yaml.dump(app.openapi(), f, default_flow_style=False, sort_keys=False)
 
 class Person(BaseModel):
     id: int
