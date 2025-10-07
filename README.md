@@ -4,15 +4,13 @@ A simple Python API built with FastAPI that includes API key authentication usin
 
 ## Features
 
-- Two endpoints: `/person` and `/status`
-- API key authentication with Unkey
-- OpenAPI specification generation
-- Rate limiting and usage tracking
+- Three endpoints: `/person`, `/status`, and `/openapi.yaml`
+- OpenAPI specification generation (available as both file and endpoint)
+- Simple REST API with JSON responses
 
 ## Prerequisites
 
 - Python 3.8+
-- Unkey account and API key
 
 ## Installation
 
@@ -32,10 +30,10 @@ A simple Python API built with FastAPI that includes API key authentication usin
    pip install -r requirements.txt
    ```
 
-4. **Set up environment variables**
-   Create a `.env` file in the project root:
+4. **Set up environment variables** (optional)
+   Create a `.env` file in the project root if needed:
    ```
-   UNKEY_ROOT_KEY=your_unkey_root_key_here
+   # Add any environment variables here
    ```
 
 ## Running the API
@@ -55,7 +53,8 @@ A simple Python API built with FastAPI that includes API key authentication usin
 3. **API will be available at:**
    - API: `http://localhost:8080`
    - Interactive docs: `http://localhost:8080/docs`
-   - OpenAPI spec: `http://localhost:8080/openapi.json`
+   - OpenAPI spec (JSON): `http://localhost:8080/openapi.json`
+   - OpenAPI spec (YAML): `http://localhost:8080/openapi.yaml`
 
 ### Option 2: Local Development
 
@@ -72,14 +71,13 @@ A simple Python API built with FastAPI that includes API key authentication usin
 3. **API will be available at:**
    - API: `http://localhost:8000`
    - Interactive docs: `http://localhost:8000/docs`
-   - OpenAPI spec: `http://localhost:8000/openapi.json`
+   - OpenAPI spec (JSON): `http://localhost:8000/openapi.json`
+   - OpenAPI spec (YAML): `http://localhost:8000/openapi.yaml`
 
 ## API Endpoints
 
 ### GET /person
 Returns mock person data.
-
-**Authentication:** Required
 
 **Response:**
 ```json
@@ -95,11 +93,21 @@ Returns mock person data.
 ### GET /status
 Returns a boolean status.
 
-**Authentication:** Required
-
 **Response:**
 ```json
 true
+```
+
+### GET /openapi.yaml
+Returns the OpenAPI specification in YAML format.
+
+**Response:**
+```yaml
+openapi: 3.1.0
+info:
+  title: My Awesome API
+  version: 1.0.0
+...
 ```
 
 ## Usage Examples
@@ -107,19 +115,16 @@ true
 ### With curl
 ```bash
 # Test the person endpoint
-curl -H "Authorization: Bearer your_api_key_here" http://localhost:8080/person
+curl http://localhost:8080/person
 
 # Test the status endpoint
-curl -H "Authorization: Bearer your_api_key_here" http://localhost:8080/status
+curl http://localhost:8080/status
+
+# Get OpenAPI spec in YAML
+curl http://localhost:8080/openapi.yaml
 
 # Pretty print JSON response
-curl -H "Authorization: Bearer your_api_key_here" http://localhost:8080/person | jq
-```
-
-### Authentication
-All endpoints require a valid API key in the Authorization header:
-```
-Authorization: Bearer your_api_key_here
+curl http://localhost:8080/person | jq
 ```
 
 ## Development

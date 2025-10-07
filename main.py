@@ -32,3 +32,10 @@ def get_person() -> Person:
 @app.get("/status", response_model=bool)
 def get_status() -> bool:
     return True
+
+@app.get("/openapi.yaml")
+def get_openapi_yaml():
+    from fastapi.responses import Response
+    openapi_schema = app.openapi()
+    yaml_content = yaml.dump(openapi_schema, default_flow_style=False, sort_keys=False)
+    return Response(content=yaml_content, media_type="application/x-yaml")
