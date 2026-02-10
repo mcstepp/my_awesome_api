@@ -26,6 +26,16 @@ paths:
               schema:
                 type: boolean
                 title: Response Get Status Status Get
+  /openapi.yaml:
+    get:
+      summary: Get Openapi Yaml
+      operationId: get_openapi_yaml_openapi_yaml_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
 components:
   schemas:
     Person:
